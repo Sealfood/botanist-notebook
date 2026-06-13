@@ -1,0 +1,64 @@
+.bloom-filters {
+  max-width: 320px;
+  margin-bottom: 1.25rem;
+}
+
+.bloom-calendar__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.bloom-calendar__header h3 {
+  margin: 0;
+}
+
+.bloom-calendar__grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+}
+
+.bloom-calendar__dow {
+  text-align: center;
+  font-family: var(--font-heading);
+  font-size: 0.8rem;
+  color: var(--color-ink-muted);
+  padding: 0.25rem;
+}
+
+.bloom-calendar__day {
+  aspect-ratio: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-heading);
+  font-size: 0.9rem;
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  position: relative;
+}
+
+.bloom-calendar__day--empty {
+  visibility: hidden;
+}
+
+.bloom-calendar__day--has-bloom {
+  background: rgba(61, 90, 62, 0.1);
+  border-color: var(--color-forest-light);
+}
+
+.bloom-calendar__day--peak {
+  background: rgba(184, 134, 11, 0.15);
+  border-color: var(--color-gold);
+}
+
+.bloom-dot {
+  position: absolute;
+  bottom: 2px;
+  font-size: 0.6rem;
+  color: var(--color-forest);
+  font-weight: 600;
+}

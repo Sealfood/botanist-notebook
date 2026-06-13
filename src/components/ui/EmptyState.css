@@ -1,0 +1,27 @@
+.empty-state {
+  text-align: center;
+  padding: 3rem 1.5rem;
+  color: var(--color-ink-muted);
+}
+
+.empty-state__illustration {
+  width: 100px;
+  height: 100px;
+  margin-bottom: 1rem;
+  opacity: 0.8;
+}
+
+.empty-state h3 {
+  color: var(--color-ink);
+  margin-bottom: 0.5rem;
+}
+
+.empty-state p {
+  max-width: 360px;
+  margin: 0 auto 1rem;
+  font-style: italic;
+}
+
+.empty-state__action {
+  margin-top: 1rem;
+}

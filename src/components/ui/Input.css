@@ -1,0 +1,24 @@
+.field-input {
+  font-family: var(--font-body);
+  font-size: 1rem;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--color-paper-dark);
+  border-radius: var(--radius-sm);
+  background: var(--color-parchment);
+  color: var(--color-ink);
+  width: 100%;
+}
+
+.field-input:focus {
+  outline: 2px solid var(--color-forest-light);
+  outline-offset: 1px;
+}
+
+.field-textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+.field-select {
+  cursor: pointer;
+}

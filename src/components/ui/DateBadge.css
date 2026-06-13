@@ -1,0 +1,33 @@
+.date-badge {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  background: var(--color-aged-paper);
+  border: 2px solid var(--color-wax);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-heading);
+  line-height: 1.1;
+  flex-shrink: 0;
+  transform: rotate(-2deg);
+}
+
+.date-badge__day {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--color-ink);
+}
+
+.date-badge__month {
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-wax);
+}
+
+.date-badge__year {
+  font-size: 0.55rem;
+  color: var(--color-ink-muted);
+}

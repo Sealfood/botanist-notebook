@@ -1,0 +1,29 @@
+@import url('https://fonts.googleapis.com/css2?family=Caveat:wght@400;600&family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap');
+
+:root {
+  --color-parchment: #f4ecd8;
+  --color-aged-paper: #e8dcc8;
+  --color-paper-dark: #d4c4a8;
+  --color-ink: #2c1810;
+  --color-ink-muted: #5c4033;
+  --color-forest: #3d5a3e;
+  --color-forest-light: #5a7a5b;
+  --color-leather: #6b3a2a;
+  --color-leather-dark: #4a2818;
+  --color-wax: #8b2500;
+  --color-wax-hover: #a83200;
+  --color-gold: #b8860b;
+  --color-wilted: #8b7355;
+
+  --font-heading: 'Cormorant Garamond', Georgia, serif;
+  --font-body: 'EB Garamond', Georgia, serif;
+  --font-hand: 'Caveat', cursive;
+
+  --shadow-soft: 0 2px 8px rgba(44, 24, 16, 0.12);
+  --shadow-card: 0 4px 16px rgba(44, 24, 16, 0.15);
+  --border-sketch: 1px dashed rgba(44, 24, 16, 0.35);
+
+  --sidebar-width: 240px;
+  --radius-sm: 4px;
+  --radius-md: 8px;
+}

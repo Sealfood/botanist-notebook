@@ -1,0 +1,57 @@
+.btn {
+  font-family: var(--font-heading);
+  font-size: 1rem;
+  font-weight: 600;
+  padding: 0.5rem 1.25rem;
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.15s, background 0.15s;
+  letter-spacing: 0.02em;
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn--primary {
+  background: radial-gradient(circle at 30% 30%, var(--color-wax-hover), var(--color-wax));
+  color: var(--color-parchment);
+  box-shadow: var(--shadow-soft), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+}
+
+.btn--primary:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-card);
+}
+
+.btn--secondary {
+  background: var(--color-aged-paper);
+  color: var(--color-ink);
+  border: 1px solid var(--color-paper-dark);
+}
+
+.btn--secondary:hover:not(:disabled) {
+  background: var(--color-paper-dark);
+}
+
+.btn--ghost {
+  background: transparent;
+  color: var(--color-forest);
+  border: 1px dashed var(--color-forest-light);
+}
+
+.btn--ghost:hover:not(:disabled) {
+  background: rgba(61, 90, 62, 0.08);
+}
+
+.btn--danger {
+  background: transparent;
+  color: var(--color-wax);
+  border: 1px solid var(--color-wax);
+}
+
+.btn--danger:hover:not(:disabled) {
+  background: rgba(139, 37, 0, 0.08);
+}

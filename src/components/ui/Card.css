@@ -1,0 +1,102 @@
+.card {
+  background: var(--color-aged-paper);
+  border: var(--border-sketch);
+  border-radius: var(--radius-md);
+  padding: 1.25rem;
+  box-shadow: var(--shadow-soft);
+  position: relative;
+}
+
+.card::before,
+.card::after {
+  content: '';
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  border-color: var(--color-paper-dark);
+  border-style: solid;
+  opacity: 0.5;
+}
+
+.card::before {
+  top: 6px;
+  left: 6px;
+  border-width: 1px 0 0 1px;
+}
+
+.card::after {
+  bottom: 6px;
+  right: 6px;
+  border-width: 0 1px 1px 0;
+}
+
+.card--ruled {
+  background-image: repeating-linear-gradient(
+    transparent,
+    transparent 27px,
+    rgba(44, 24, 16, 0.08) 27px,
+    rgba(44, 24, 16, 0.08) 28px
+  );
+  background-position: 0 12px;
+}
+
+.card--field-note {
+  background: var(--color-parchment);
+  border-left: 3px solid var(--color-wax);
+  padding-left: 1.5rem;
+}
+
+.card--field-note::before {
+  content: none;
+}
+
+.card h3 {
+  margin-top: 0;
+}
+
+.card p:last-child {
+  margin-bottom: 0;
+}
+
+.card-link {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+
+.card-link:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-card);
+  text-decoration: none;
+}
+
+.card-link:hover h3 {
+  color: var(--color-forest);
+}
+
+.card-meta {
+  font-size: 0.9rem;
+  color: var(--color-ink-muted);
+  margin-top: 0.5rem;
+}
+
+.card-actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 1rem;
+  flex-wrap: wrap;
+}
+
+.card--overdue {
+  border-color: var(--color-wilted);
+  background: linear-gradient(135deg, var(--color-aged-paper), #f0e8dc);
+}
+
+.card--due {
+  border-color: var(--color-forest-light);
+}
+
+.card--peak {
+  border-color: var(--color-gold);
+}
