@@ -27,6 +27,7 @@ export function BloomTracker() {
     useLiveQuery(() => db.bloomRecords.orderBy('date').reverse().toArray(), []) ?? [];
   const [filterPlantId, setFilterPlantId] = useState('');
   const [month, setMonth] = useState(new Date());
+  const [selectedDate, setSelectedDate] = useState<string | null>(null);
   const [modalOpen, setModalOpen] = useState(false);
   const [form, setForm] = useState({
     plantId: '',
@@ -55,6 +56,22 @@ export function BloomTracker() {
     return map;
   }, [filtered]);
 
+  const visibleBloomGroups = useMemo(() => {
+    if (!selectedDate) return Array.from(bloomsByDate.entries());
+    const selectedBlooms = bloomsByDate.get(selectedDate);
+    return selectedBlooms ? [[selectedDate, selectedBlooms] as [string, BloomRecord[]]] : [];
+  }, [bloomsByDate, selectedDate]);
+
+  const openLogBloomModal = (date = format(new Date(), 'yyyy-MM-dd')) => {
+    setForm({
+      plantId: filterPlantId || plants[0]?.id || '',
+      date,
+      intensity: 'peak',
+      notes: '',
+    });
+    setModalOpen(true);
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!form.plantId) return;
@@ -80,6 +97,10 @@ export function BloomTracker() {
     }
   };
 
+  const handleCalendarDateClick = (date: string) => {
+    setSelectedDate((currentDate) => (currentDate === date ? null : date));
+  };
+
   return (
     <>
       <header className="page-header">
@@ -88,13 +109,16 @@ export function BloomTracker() {
       </header>
 
       <div className="page-actions">
-        <Button onClick={() => setModalOpen(true)}>Log Bloom</Button>
+        <Button onClick={() => openLogBloomModal()}>Log Bloom</Button>
       </div>
 
       <div className="bloom-filters">
         <PlantPicker
           value={filterPlantId}
-          onChange={setFilterPlantId}
+          onChange={(id) => {
+            setFilterPlantId(id);
+            setSelectedDate(null);
+          }}
           allowEmpty
           emptyLabel="All specimens"
         />
@@ -129,18 +153,47 @@ export function BloomTracker() {
               {monthDays.map((day) => {
                 const key = format(day, 'yyyy-MM-dd');
                 const dayBlooms = bloomsByDate.get(key) ?? [];
-                const hasPeak = dayBlooms.some((b) => b.intensity === 'peak');
+                const visibleBlooms = dayBlooms.slice(0, 2);
+                const hiddenBloomCount = dayBlooms.length - visibleBlooms.length;
                 return (
-                  <div
+                  <button
+                    type="button"
                     key={key}
-                    className={`bloom-calendar__day ${dayBlooms.length ? 'bloom-calendar__day--has-bloom' : ''} ${hasPeak ? 'bloom-calendar__day--peak' : ''}`}
-                    title={dayBlooms.map((b) => getPlantLabel(plants, b.plantId)).join(', ')}
+                    className={`bloom-calendar__day ${dayBlooms.length ? 'bloom-calendar__day--has-bloom' : ''} ${selectedDate === key ? 'bloom-calendar__day--selected' : ''}`}
+                    onClick={() => handleCalendarDateClick(key)}
+                    title={
+                      dayBlooms.length
+                        ? dayBlooms.map((b) => getPlantLabel(plants, b.plantId)).join(', ')
+                        : `Show bloom records for ${key}`
+                    }
+                    aria-label={`Show bloom records for ${format(day, 'MMMM d, yyyy')}`}
                   >
-                    <span>{format(day, 'd')}</span>
-                    {dayBlooms.length > 0 && (
-                      <span className="bloom-dot">{dayBlooms.length}</span>
+                    <span className="bloom-calendar__date">{format(day, 'd')}</span>
+                    {dayBlooms.length === 1 && (
+                      <span
+                        className={`bloom-intensity-chip bloom-intensity-chip--${dayBlooms[0].intensity ?? 'light'}`}
+                      >
+                        {getPlantLabel(plants, dayBlooms[0].plantId)}
+                      </span>
                     )}
-                  </div>
+                    {dayBlooms.length > 1 && (
+                      <span className="bloom-day-list" aria-hidden="true">
+                        {visibleBlooms.map((bloom) => (
+                          <span
+                            key={bloom.id}
+                            className={`bloom-day-list__item ${bloom.intensity ? `bloom-day-list__item--${bloom.intensity}` : ''}`}
+                          >
+                            {getPlantLabel(plants, bloom.plantId)}
+                          </span>
+                        ))}
+                        {hiddenBloomCount > 0 && (
+                          <span className="bloom-day-list__more">
+                            +{hiddenBloomCount} more
+                          </span>
+                        )}
+                      </span>
+                    )}
+                  </button>
                 );
               })}
             </div>
@@ -152,33 +205,59 @@ export function BloomTracker() {
             <EmptyState
               title="No blooms recorded"
               description="Log your first flowering observation for the season."
-              action={<Button onClick={() => setModalOpen(true)}>Log Bloom</Button>}
+              action={<Button onClick={() => openLogBloomModal()}>Log Bloom</Button>}
+            />
+          ) : selectedDate && visibleBloomGroups.length === 0 ? (
+            <EmptyState
+              title="No blooms on this date"
+              description={`No bloom records are logged for ${selectedDate}.`}
+              action={
+                <Button variant="secondary" onClick={() => setSelectedDate(null)}>
+                  Show All Records
+                </Button>
+              }
             />
           ) : (
-            <div className="grid-2">
-              {filtered.map((bloom) => (
-                <Card
-                  key={bloom.id}
-                  className={bloom.intensity === 'peak' ? 'card--peak' : ''}
-                >
-                  <div style={{ display: 'flex', gap: '1rem' }}>
-                    <DateBadge date={bloom.date} />
-                    <div style={{ flex: 1 }}>
-                      <h3>{getPlantLabel(plants, bloom.plantId)}</h3>
-                      {bloom.intensity && (
-                        <span
-                          className={`tag ${bloom.intensity === 'peak' ? 'tag--peak' : ''}`}
-                        >
-                          {bloom.intensity}
-                        </span>
-                      )}
-                      {bloom.notes && <p>{bloom.notes}</p>}
-                      <Button variant="danger" onClick={() => deleteBloom(bloom.id)}>
-                        Remove
-                      </Button>
-                    </div>
+            <div className="bloom-record-groups">
+              {selectedDate && (
+                <div className="bloom-record-groups__actions">
+                  <Button variant="secondary" onClick={() => setSelectedDate(null)}>
+                    Show All Records
+                  </Button>
+                </div>
+              )}
+              {visibleBloomGroups.map(([date, dateBlooms]) => (
+                <details key={date} className="bloom-record-group">
+                  <summary className="bloom-record-group__summary">
+                    <DateBadge date={date} />
+                    <span className="bloom-record-group__title">
+                      {dateBlooms.length === 1
+                        ? '1 bloom record'
+                        : `${dateBlooms.length} bloom records`}
+                    </span>
+                  </summary>
+                  <div className="grid-2 bloom-record-group__records">
+                    {dateBlooms.map((bloom) => (
+                      <Card
+                        key={bloom.id}
+                        className={bloom.intensity === 'peak' ? 'card--peak' : ''}
+                      >
+                        <h3>{getPlantLabel(plants, bloom.plantId)}</h3>
+                        {bloom.intensity && (
+                          <span
+                            className={`tag ${bloom.intensity === 'peak' ? 'tag--peak' : ''}`}
+                          >
+                            {bloom.intensity}
+                          </span>
+                        )}
+                        {bloom.notes && <p>{bloom.notes}</p>}
+                        <Button variant="danger" onClick={() => deleteBloom(bloom.id)}>
+                          Remove
+                        </Button>
+                      </Card>
+                    ))}
                   </div>
-                </Card>
+                </details>
               ))}
             </div>
           )}

@@ -45,8 +45,20 @@ export function PruningNotes() {
     return map;
   }, [filtered, groupByPlant]);
 
-  const handleSubmit = async (e: React.SubmitEvent) => {
-    (e.target as HTMLFormElement).preventDefault();
+  const openAddNoteModal = () => {
+    setForm({
+      plantId: filterPlantId || plants[0]?.id || '',
+      date: format(new Date(), 'yyyy-MM-dd'),
+      action: '',
+      notes: '',
+      beforeFile: null,
+      afterFile: null,
+    });
+    setModalOpen(true);
+  };
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
     if (!form.plantId || !form.action.trim()) return;
 
     let beforePhotoKey: string | undefined;
@@ -118,7 +130,7 @@ export function PruningNotes() {
       </header>
 
       <div className="page-actions">
-        <Button onClick={() => setModalOpen(true)}>Add Field Note</Button>
+        <Button onClick={openAddNoteModal}>Add Field Note</Button>
         <Button
           variant="secondary"
           onClick={() => setGroupByPlant(!groupByPlant)}
@@ -145,7 +157,7 @@ export function PruningNotes() {
         <EmptyState
           title="No pruning notes yet"
           description="Record your first cutting or deadheading observation in the field journal."
-          action={<Button onClick={() => setModalOpen(true)}>Add Field Note</Button>}
+          action={<Button onClick={openAddNoteModal}>Add Field Note</Button>}
         />
       ) : groupByPlant && grouped ? (
         Array.from(grouped.entries()).map(([plantId, plantNotes]) => (

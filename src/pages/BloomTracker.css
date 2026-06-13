@@ -34,11 +34,38 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  gap: 0.15rem;
   font-family: var(--font-heading);
   font-size: 0.9rem;
+  color: inherit;
+  background: transparent;
   border: 1px solid transparent;
   border-radius: var(--radius-sm);
   position: relative;
+  cursor: pointer;
+  padding: 0;
+  transition:
+    background-color 0.15s ease,
+    border-color 0.15s ease,
+    transform 0.15s ease;
+}
+
+.bloom-calendar__day:hover {
+  background: rgba(184, 134, 11, 0.1);
+  border-color: var(--color-gold);
+}
+
+.bloom-calendar__day:focus-visible {
+  outline: 2px solid var(--color-forest);
+  outline-offset: 2px;
+}
+
+.bloom-calendar__day:active {
+  transform: translateY(1px);
+}
+
+.bloom-calendar__date {
+  line-height: 1;
 }
 
 .bloom-calendar__day--empty {
@@ -46,19 +73,147 @@
 }
 
 .bloom-calendar__day--has-bloom {
-  background: rgba(61, 90, 62, 0.1);
-  border-color: var(--color-forest-light);
-}
-
-.bloom-calendar__day--peak {
-  background: rgba(184, 134, 11, 0.15);
+  background: rgba(184, 134, 11, 0.14);
   border-color: var(--color-gold);
 }
 
-.bloom-dot {
+.bloom-calendar__day--selected {
+  box-shadow: inset 0 0 0 2px var(--color-wax);
+}
+
+.bloom-intensity-chip {
   position: absolute;
   bottom: 2px;
-  font-size: 0.6rem;
+  max-width: calc(100% - 0.35rem);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  border-radius: 3px;
+  padding: 1px 4px;
+  font-family: var(--font-body);
+  font-size: 0.56rem;
+  line-height: 1.2;
+  font-weight: 400;
+}
+
+.bloom-day-list {
+  width: calc(100% - 0.35rem);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  overflow: hidden;
+}
+
+.bloom-day-list__item,
+.bloom-day-list__more {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  border-radius: 3px;
+  padding: 1px 3px;
+  font-family: var(--font-body);
+  font-size: 0.58rem;
+  line-height: 1.2;
+  text-align: left;
+}
+
+.bloom-day-list__item {
+  background: rgba(184, 134, 11, 0.18);
+  color: var(--color-leather-dark);
+}
+
+.bloom-intensity-chip--light,
+.bloom-day-list__item--light {
+  background: rgba(61, 90, 62, 0.16);
   color: var(--color-forest);
+}
+
+.bloom-intensity-chip--peak,
+.bloom-day-list__item--peak {
+  background: rgba(184, 134, 11, 0.24);
+  color: var(--color-leather-dark);
+}
+
+.bloom-intensity-chip--fading,
+.bloom-day-list__item--fading {
+  background: rgba(132, 98, 67, 0.18);
+  color: var(--color-ink-muted);
+}
+
+.bloom-day-list__more {
+  color: var(--color-ink-muted);
   font-weight: 600;
+  text-align: center;
+  padding-inline: 0;
+}
+
+.bloom-record-groups {
+  display: grid;
+  gap: 0.85rem;
+}
+
+.bloom-record-groups__actions {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.bloom-record-group {
+  border-top: 1px dotted var(--color-paper-dark);
+  padding-top: 0.85rem;
+}
+
+.bloom-record-group:first-child {
+  border-top: none;
+  padding-top: 0;
+}
+
+.bloom-record-group__summary {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  cursor: pointer;
+  list-style: none;
+  width: fit-content;
+  margin-bottom: 0.85rem;
+}
+
+.bloom-record-group__summary::-webkit-details-marker {
+  display: none;
+}
+
+.bloom-record-group__summary::after {
+  content: '+';
+  width: 1.5rem;
+  height: 1.5rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--color-paper-dark);
+  border-radius: var(--radius-sm);
+  color: var(--color-ink-muted);
+  background: var(--color-aged-paper);
+  font-family: var(--font-heading);
+  line-height: 1;
+}
+
+.bloom-record-group[open] .bloom-record-group__summary::after {
+  content: '-';
+}
+
+.bloom-record-group__summary:focus-visible {
+  outline: 2px solid var(--color-forest);
+  outline-offset: 4px;
+  border-radius: var(--radius-sm);
+}
+
+.bloom-record-group__title {
+  font-family: var(--font-heading);
+  color: var(--color-ink-muted);
+}
+
+.bloom-record-group__records {
+  margin-bottom: 0.65rem;
 }
