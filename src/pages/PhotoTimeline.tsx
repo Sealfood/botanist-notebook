@@ -53,6 +53,16 @@ export function PhotoTimeline() {
     return photos.filter((p) => p.plantId === filterPlantId);
   }, [photos, filterPlantId]);
 
+  const openAddPhotoModal = () => {
+    setForm({
+      plantId: filterPlantId || plants[0]?.id || '',
+      date: format(new Date(), 'yyyy-MM-dd'),
+      caption: '',
+      file: null,
+    });
+    setModalOpen(true);
+  };
+
   useEffect(() => {
     if (!lightbox) {
       setLightboxUrl(null);
@@ -111,7 +121,7 @@ export function PhotoTimeline() {
       </header>
 
       <div className="page-actions">
-        <Button onClick={() => setModalOpen(true)}>Add Photograph</Button>
+        <Button onClick={openAddPhotoModal}>Add Photograph</Button>
       </div>
 
       <div className="bloom-filters">
@@ -132,7 +142,7 @@ export function PhotoTimeline() {
         <EmptyState
           title="No photographs yet"
           description="Begin your visual chronicle by adding the first garden photograph."
-          action={<Button onClick={() => setModalOpen(true)}>Add Photograph</Button>}
+          action={<Button onClick={openAddPhotoModal}>Add Photograph</Button>}
         />
       ) : (
         <div className="photo-gallery">

@@ -12,8 +12,9 @@ export interface Plant {
 export interface Bed {
   id: string;
   label: string;
-  shape: 'rect' | 'polygon';
+  shape: 'rect' | 'circle' | 'u' | 'polygon';
   coords: number[];
+  rotation?: number;
 }
 
 export interface GardenMap {
@@ -22,6 +23,7 @@ export interface GardenMap {
   width: number;
   height: number;
   beds: Bed[];
+  backgroundPhotoKey?: string;
 }
 
 export interface MapPlacement {

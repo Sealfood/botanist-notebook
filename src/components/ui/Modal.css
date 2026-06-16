@@ -9,6 +9,11 @@
   padding: 1rem;
 }
 
+.modal-overlay--floating {
+  align-items: flex-start;
+  padding-top: 4rem;
+}
+
 .modal {
   background: var(--color-parchment);
   border: 2px solid var(--color-paper-dark);
@@ -20,12 +25,21 @@
   overflow-y: auto;
 }
 
+.modal--draggable {
+  touch-action: none;
+}
+
 .modal__header {
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 1rem 1.25rem;
   border-bottom: var(--border-sketch);
+}
+
+.modal--draggable .modal__header {
+  cursor: move;
+  user-select: none;
 }
 
 .modal__header h2 {
