@@ -14,8 +14,10 @@ import { getPlantLabel } from '../components/ui/PlantPicker';
 export function Dashboard() {
   const plants = usePlants() ?? [];
   const schedules = useWateringSchedules() ?? [];
+  // Keep dashboard alerts focused on schedules that are both due and enabled.
   const dueWatering = schedules.filter((s) => s.due && s.enabled);
 
+  // Dashboard strips intentionally show only the latest activity.
   const recentBlooms =
     useLiveQuery(() => db.bloomRecords.orderBy('date').reverse().limit(5).toArray(), []) ??
     [];

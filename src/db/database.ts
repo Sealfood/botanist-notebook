@@ -22,6 +22,7 @@ export class BotanistDatabase extends Dexie {
 
   constructor() {
     super('botanist-notebook');
+    // Indexed fields mirror the queries used throughout the app.
     this.version(1).stores({
       plants: 'id, commonName, botanicalName, createdAt',
       gardenMaps: 'id, name',
@@ -39,6 +40,7 @@ export const db = new BotanistDatabase();
 
 export async function savePhotoBlob(file: File): Promise<string> {
   const key = crypto.randomUUID();
+  // Keep photo binaries out of record tables so entries stay lightweight.
   await db.photoBlobs.put({ key, blob: file });
   return key;
 }
@@ -46,6 +48,7 @@ export async function savePhotoBlob(file: File): Promise<string> {
 export async function getPhotoUrl(blobKey: string): Promise<string | null> {
   const record = await db.photoBlobs.get(blobKey);
   if (!record) return null;
+  // Callers own the returned object URL and should revoke it when done.
   return URL.createObjectURL(record.blob);
 }
 

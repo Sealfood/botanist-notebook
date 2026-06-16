@@ -10,6 +10,7 @@ export async function seedDatabaseIfEmpty(): Promise<void> {
 
   const count = await db.plants.count();
   if (count > 0) {
+    // Existing user data takes precedence over sample notebook entries.
     localStorage.setItem(SEED_KEY, 'true');
     return;
   }

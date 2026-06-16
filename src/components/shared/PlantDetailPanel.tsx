@@ -13,6 +13,7 @@ interface PlantDetailPanelProps {
 export function PlantDetailPanel({ plant }: PlantDetailPanelProps) {
   const related = useLiveQuery(
     async () => {
+      // Gather the plant's notebook trail in parallel for the detail page.
       const [blooms, photos, pruning, watering] = await Promise.all([
         db.bloomRecords.where('plantId').equals(plant.id).reverse().sortBy('date'),
         db.photoEntries.where('plantId').equals(plant.id).reverse().sortBy('date'),

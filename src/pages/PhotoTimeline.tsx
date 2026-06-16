@@ -18,11 +18,13 @@ function PhotoThumbnail({ blobKey, alt }: { blobKey: string; alt: string }) {
 
   useEffect(() => {
     let active = true;
+    // Blob URLs are async because the image data lives in IndexedDB.
     getPhotoUrl(blobKey).then((u) => {
       if (active) setUrl(u);
     });
     return () => {
       active = false;
+      // Revoke object URLs so thumbnail navigation does not leak memory.
       if (url) URL.revokeObjectURL(url);
     };
   }, [blobKey]);
@@ -58,6 +60,7 @@ export function PhotoTimeline() {
     }
     let active = true;
     let objectUrl: string | null = null;
+    // Track the exact URL created for this lightbox so cleanup revokes the right one.
     getPhotoUrl(lightbox.blobKey).then((url) => {
       if (active && url) {
         objectUrl = url;
@@ -92,6 +95,7 @@ export function PhotoTimeline() {
 
   const deletePhoto = async (id: string, blobKey: string) => {
     if (!confirm('Remove this photograph from the timeline?')) return;
+    // Delete metadata and blob together so entries cannot point at missing photos.
     await db.transaction('rw', [db.photoEntries, db.photoBlobs], async () => {
       await db.photoEntries.delete(id);
       await deletePhotoBlob(blobKey);

@@ -30,6 +30,7 @@ export async function updatePlant(id: string, data: Partial<Plant>): Promise<voi
 }
 
 export async function deletePlant(id: string): Promise<void> {
+  // Deleting a plant also removes dependent records to avoid orphaned entries.
   await db.transaction(
     'rw',
     [

@@ -36,6 +36,7 @@ export function PruningNotes() {
 
   const grouped = useMemo(() => {
     if (!groupByPlant) return null;
+    // Preserve the filtered date order while collecting notes under each plant.
     const map = new Map<string, typeof notes>();
     for (const note of filtered) {
       const existing = map.get(note.plantId) ?? [];
@@ -46,6 +47,7 @@ export function PruningNotes() {
   }, [filtered, groupByPlant]);
 
   const openAddNoteModal = () => {
+    // Seed plantId so saving works even if the picker is never touched.
     setForm({
       plantId: filterPlantId || plants[0]?.id || '',
       date: format(new Date(), 'yyyy-MM-dd'),
@@ -89,6 +91,7 @@ export function PruningNotes() {
 
   const deleteNote = async (note: (typeof notes)[0]) => {
     if (!confirm('Remove this pruning note?')) return;
+    // Remove attached before/after photos with the note record.
     await db.transaction('rw', [db.pruningNotes, db.photoBlobs], async () => {
       await db.pruningNotes.delete(note.id);
       if (note.beforePhotoKey) await deletePhotoBlob(note.beforePhotoKey);
@@ -248,6 +251,7 @@ function PruningPhoto({ blobKey, label }: { blobKey: string; label: string }) {
 
   useEffect(() => {
     let active = true;
+    // Photos are stored as blobs in IndexedDB and rendered through object URLs.
     getPhotoUrl(blobKey).then((u) => {
       if (active) setUrl(u);
     });

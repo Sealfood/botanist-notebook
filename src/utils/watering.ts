@@ -3,6 +3,7 @@ import type { WateringSchedule } from '../db/schema';
 
 export function getNextWaterDate(schedule: WateringSchedule): Date | null {
   if (!schedule.enabled) return null;
+  // Unwatered schedules start counting from today instead of becoming overdue.
   const base = schedule.lastWatered
     ? startOfDay(parseISO(schedule.lastWatered))
     : startOfDay(new Date());

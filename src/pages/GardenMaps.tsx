@@ -26,6 +26,7 @@ export function GardenMaps() {
 
   const selectedMap = maps.find((m) => m.id === selectedMapId) ?? maps[0] ?? null;
 
+  // Placements are scoped to the active map so switching maps updates markers.
   const placements =
     useLiveQuery(
       () =>
@@ -85,10 +86,12 @@ export function GardenMaps() {
     pt.y = e.clientY;
     const ctm = svg.getScreenCTM();
     if (!ctm) return;
+    // Convert from viewport mouse coordinates into the SVG's map coordinate space.
     const { x, y } = pt.matrixTransform(ctm.inverse());
 
     if (addBedMode) {
       if (!bedDraft) {
+        // First click anchors the bed; second click defines the opposite corner.
         setBedDraft({ x, y });
       } else {
         await addBed(bedDraft.x, bedDraft.y, x, y);
@@ -269,10 +272,12 @@ function MapCanvas({ map, placements, plants, bedDraft, onMapClick }: MapCanvasP
 
   const handleWheel = useCallback((e: React.WheelEvent) => {
     e.preventDefault();
+    // Clamp zoom so the map remains navigable with wheel input.
     setZoom((z) => Math.min(3, Math.max(0.5, z - e.deltaY * 0.001)));
   }, []);
 
   const startPan = (e: React.MouseEvent) => {
+    // Middle mouse or Alt+drag pans without conflicting with marker dragging.
     if (e.button !== 1 && !e.altKey) return;
     e.preventDefault();
     const startX = e.clientX - pan.x;
@@ -302,6 +307,7 @@ function MapCanvas({ map, placements, plants, bedDraft, onMapClick }: MapCanvasP
       pt.y = ev.clientY;
       const ctm = svg.getScreenCTM();
       if (!ctm) return;
+      // Store marker positions in map coordinates, not screen pixels.
       const { x, y } = pt.matrixTransform(ctm.inverse());
       await db.mapPlacements.update(placementId, { x, y });
     };

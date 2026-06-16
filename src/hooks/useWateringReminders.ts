@@ -13,6 +13,7 @@ export function useWateringSchedules() {
   return useLiveQuery(async () => {
     const schedules = await db.wateringSchedules.toArray();
     const plants = await db.plants.toArray();
+    // Dexie has no joins, so plant details are attached in memory.
     const plantMap = new Map(plants.map((p) => [p.id, p]));
 
     return schedules
@@ -41,6 +42,7 @@ export function useNotifications() {
 
     for (const schedule of schedules) {
       if (!isWateringDue(schedule)) continue;
+      // Avoid repeating the same reminder every polling interval.
       if (notifiedRef.current.has(schedule.id)) continue;
 
       const plant = plantMap.get(schedule.plantId);
@@ -61,6 +63,7 @@ export function useNotifications() {
   }, [checkAndNotify]);
 
   const requestPermission = useCallback(async () => {
+    // Browsers require this to be called from a user gesture.
     if (!('Notification' in window)) return 'unsupported' as const;
     if (Notification.permission === 'granted') return 'granted' as const;
     if (Notification.permission === 'denied') return 'denied' as const;

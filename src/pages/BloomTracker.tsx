@@ -56,6 +56,7 @@ export function BloomTracker() {
     return map;
   }, [filtered]);
 
+  // Calendar date selection narrows the records section without changing the plant filter.
   const visibleBloomGroups = useMemo(() => {
     if (!selectedDate) return Array.from(bloomsByDate.entries());
     const selectedBlooms = bloomsByDate.get(selectedDate);
@@ -63,6 +64,7 @@ export function BloomTracker() {
   }, [bloomsByDate, selectedDate]);
 
   const openLogBloomModal = (date = format(new Date(), 'yyyy-MM-dd')) => {
+    // Seed plantId so the picker cannot look selected while form state is empty.
     setForm({
       plantId: filterPlantId || plants[0]?.id || '',
       date,
@@ -98,6 +100,7 @@ export function BloomTracker() {
   };
 
   const handleCalendarDateClick = (date: string) => {
+    // Clicking the selected date again returns the record list to its full view.
     setSelectedDate((currentDate) => (currentDate === date ? null : date));
   };
 
@@ -153,6 +156,7 @@ export function BloomTracker() {
               {monthDays.map((day) => {
                 const key = format(day, 'yyyy-MM-dd');
                 const dayBlooms = bloomsByDate.get(key) ?? [];
+                // Keep the calendar compact; the full list lives below the calendar.
                 const visibleBlooms = dayBlooms.slice(0, 2);
                 const hiddenBloomCount = dayBlooms.length - visibleBlooms.length;
                 return (

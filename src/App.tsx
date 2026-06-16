@@ -12,6 +12,7 @@ import { WateringReminders } from './pages/WateringReminders';
 
 export default function App() {
   useEffect(() => {
+    // Seed only on first local run so returning users keep their notebook data.
     seedDatabaseIfEmpty().catch(console.error);
   }, []);
 

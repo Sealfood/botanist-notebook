@@ -66,6 +66,7 @@ export function PlantDatabase() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    // Store optional blank fields as undefined so cards can test presence directly.
     const data = {
       commonName: form.commonName.trim(),
       botanicalName: form.botanicalName.trim(),
@@ -84,6 +85,7 @@ export function PlantDatabase() {
 
   const handleDelete = async (id: string) => {
     if (confirm('Remove this specimen from the herbarium? All linked records will also be deleted.')) {
+      // deletePlant owns the cascade across linked notebook tables.
       await deletePlant(id);
     }
   };
